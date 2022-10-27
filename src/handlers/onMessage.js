@@ -39,7 +39,8 @@ const getRoomMessage = async (msg) => {
   const room = msg.room() // 是否为群消息
   const roomName = await room.topic()
   let text = msg.text()
-  const mentionSelf = await msg.mentionSelf() // @自己
+  // const mentionSelf = await msg.mentionSelf() // @自己
+  const mentionSelf = text.includes(`@。`)
   if (mentionSelf) {
     text = text.replace(/@[^,，：:\s@]+/g, '').trim()
   }

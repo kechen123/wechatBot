@@ -9,7 +9,11 @@ async function roomSay(contact, room, msg) {
     if (msg.content) {
       // 文字
       console.log('回复内容', msg.content)
-      msg.mentionSelf ? await room.say(msg.content, contact) : await room.say(msg.content)
+      //msg.mentionSelf ? await room.say(msg.content, contact) : await room.say(msg.content)
+
+      const members = await room.memberAll() // all members in this room
+      const someMembers = members.slice(0, 3)
+      msg.mentionSelf ? await room.say(msg.content, ...someMembers) : await room.say(msg.content)
     }
   } catch (e) {
     console.log('群回复错误', e)

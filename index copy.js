@@ -1,19 +1,18 @@
 const { log, WechatyBuilder, ScanStatus } = require('wechaty')
-const { PuppetPadlocal } = require('wechaty-puppet-padlocal')
 const onScan = require('./src/handlers/onScan')
 const onLogin = require('./src/handlers/onLogin')
 const onMessage = require('./src/handlers/onMessage')
 
 //抽签
 //https://wap.99166.com/phoneapp/czsm/384.html
-// log.level('silly')
-const token = 'puppet_padlocal_97684c5548f94c7faa8f9dfaa7076c57'
-const puppet = new PuppetPadlocal({
-  token,
-})
+
+const name = 'wechat-assistant'
 const bot = WechatyBuilder.build({
-  name: 'BotName',
-  puppet,
+  name, // generate xxxx.memory-card.json and save login data for the next login
+  puppet: 'wechaty-puppet-wechat',
+  puppetOptions: {
+    uos: true,
+  },
 })
 bot.on('scan', onScan).on('login', onLogin).on('message', onMessage)
 bot.start().then(() => {
