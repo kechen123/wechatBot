@@ -1,0 +1,26 @@
+{
+  "name": "wechatbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kechen123/wechatBot.git"
+  },
+  "keywords": [],
+  "author": "kechen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kechen123/wechatBot/issues"
+  },
+  "homepage": "https://github.com/kechen123/wechatBot#readme",
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "wechaty": "^1.20.2",
+    "wechaty-puppet-wechat": "^1.18.4"
+  }
+}
