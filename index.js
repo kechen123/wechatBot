@@ -1,5 +1,8 @@
 const { log, WechatyBuilder, ScanStatus } = require('wechaty')
-const LOGPRE = '[PadLocalDemo]'
+const onScan = require('./src/handlers/onScan')
+const onLogin = require('./src/handlers/onLogin')
+const onMessage = require('./src/handlers/onMessage')
+
 const name = 'wechat-assistant'
 const bot = WechatyBuilder.build({
   name, // generate xxxx.memory-card.json and save login data for the next login
@@ -8,26 +11,5 @@ const bot = WechatyBuilder.build({
     uos: true,
   },
 })
-bot
-  .on('scan', (qrcode, status) => {
-    //启动
-    if (status === ScanStatus.Waiting && qrcode) {
-      const qrcodeImageUrl = ['https://wechaty.js.org/qrcode/', encodeURIComponent(qrcode)].join('')
-
-      log.info(LOGPRE, `onScan: ${ScanStatus[status]}(${status})`)
-
-      log.info('\n==================================================================')
-      log.info('\n* Two ways to sign on with qr code')
-      log.info('\n1. Scan following QR code:\n')
-
-      require('qrcode-terminal').generate(qrcode, { small: true }) // show qrcode on console
-
-      log.info(`\n2. Or open the link in your browser: ${qrcodeImageUrl}`)
-      log.info('\n==================================================================\n')
-    } else {
-      log.info(LOGPRE, `onScan: ${ScanStatus[status]}(${status})`)
-    }
-  })
-  .on('login', (user) => log.info(`User ${user} logged in`))
-  .on('message', (message) => log.info(`Message: ${message}`))
+bot.on('scan', onScan).on('login', onLogin).on('message', onMessage)
 bot.start()
