@@ -1,5 +1,6 @@
 const { log, WechatyBuilder, ScanStatus } = require('wechaty')
 const { PuppetPadlocal } = require('wechaty-puppet-padlocal')
+const config = require('./config')
 const onScan = require('./src/handlers/onScan')
 const onLogin = require('./src/handlers/onLogin')
 const onMessage = require('./src/handlers/onMessage')
@@ -18,5 +19,5 @@ const bot = WechatyBuilder.build({
 bot.on('scan', onScan).on('login', onLogin).on('message', onMessage)
 bot.start().then(() => {
   log.info('bot.Message.Type.Text>>>', bot)
-  Object.assign(global, { G: bot })
+  Object.assign(global, { G: { bot, config } })
 })

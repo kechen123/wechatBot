@@ -1,5 +1,6 @@
 const { log } = require('wechaty')
 const { authorityRoom, authorityFriend } = require('../utils/permission')
+const service = require('../service')
 const send = require('./send')
 
 //验证消息当前是否可以回复，当前只支持文字
@@ -34,29 +35,45 @@ const checkMsg = async (bot, msg) => {
   return b
 }
 
+//是否@自己
+const mentionSelf = async (msg) => {
+  let text = msg.text()
+  // const mentionSelf = await msg.mentionSelf() // @自己
+  let mentionSelf = text.includes(`@${G.config.wechatName}`)
+
+  if (mentionSelf) {
+    text = text.replace(/@[^,，：:\s@]+/g, '').trim()
+  }
+  if (text.indexOf(G.config.robotName) > -1) {
+    mentionSelf = true
+    text = text.replace(G.config.robotName, '').trim()
+  }
+  return { boo: mentionSelf, text }
+}
+
 //群聊回复
 const getRoomMessage = async (msg) => {
   const room = msg.room() // 是否为群消息
   const roomName = await room.topic()
-  let text = msg.text()
-  // const mentionSelf = await msg.mentionSelf() // @自己
-  const mentionSelf = text.includes(`@。`)
-  if (mentionSelf) {
+  const mSelf = await mentionSelf(msg) // @自己
+  let text = mSelf.text
+  if (mSelf.boo) {
     text = text.replace(/@[^,，：:\s@]+/g, '').trim()
   }
   const sendMsg = {
     type: 1,
     room: true,
-    mentionSelf,
+    mSelf: mSelf.boo,
+  }
+  if (!mSelf) {
+    return
   }
   if (text.indexOf('图片') > -1) {
     sendMsg.type = 2
     // sendMsg.url = resolve(__dirname, 'src/assets/image/1.png')
     sendMsg.url = '*本地*./src/assets/image/1.png'
   } else {
-    sendMsg.content = `-------收到来自群‘${roomName}’的消息-------
-  ${text}
-  `
+    sendMsg.content = await service(text)
   }
 
   return sendMsg
@@ -81,10 +98,12 @@ const onMessage = async (msg) => {
   // try {
   const msgSelf = msg.self() // 是否自己发给自己的消息
   const contact = msg.talker() // 发消息人
-  const b = (await checkMsg(G, msg)) ?? false
-  if (msgSelf || !b) return
-
+  const mSelf = await mentionSelf(msg) // @自己
+  const b = (await checkMsg(G.bot, msg)) ?? false
   const room = msg.room() // 是否为群消息
+  //自己给自己发消息 消息当前是否可以回复 群聊必须@自己
+  if (msgSelf || !b || (room && !mSelf.boo)) return
+
   let sendMsg = {}
   if (room) {
     if (await authorityRoom()) {
