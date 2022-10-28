@@ -48,11 +48,17 @@ const getRoomMessage = async (msg) => {
     type: 1,
     room: true,
     mentionSelf,
-    content: '',
   }
-  sendMsg.content = `-------收到来自群‘${roomName}’的消息-------
+  if (text.indexOf('图片') > -1) {
+    sendMsg.type = 2
+    // sendMsg.url = resolve(__dirname, 'src/assets/image/1.png')
+    sendMsg.url = '*本地*./src/assets/image/1.png'
+  } else {
+    sendMsg.content = `-------收到来自群‘${roomName}’的消息-------
   ${text}
   `
+  }
+
   return sendMsg
 }
 

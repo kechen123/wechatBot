@@ -1,12 +1,14 @@
 lockfileVersion: 5.4
 
 specifiers:
+  file-box: ^1.4.15
   qrcode-terminal: ^0.12.0
   wechaty: ^1.20.2
   wechaty-puppet-padlocal: ^1.20.1
   wechaty-puppet-wechat: ^1.18.4
 
 dependencies:
+  file-box: registry.npmmirror.com/file-box/1.4.15
   qrcode-terminal: registry.npmmirror.com/qrcode-terminal/0.12.0
   wechaty: registry.npmmirror.com/wechaty/1.20.2
   wechaty-puppet-padlocal: registry.npmmirror.com/wechaty-puppet-padlocal/1.20.1
